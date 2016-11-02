@@ -1,0 +1,19 @@
+{
+    "name": "orleansmetropole/openagenda",
+    "description": "OpenAgenda PHP client library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Geoffroy Cochard",
+            "email": "geoffroy.cochard@orleans-agglo.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "OpenAgenda\\": "src/OpenAgenda/"
+        }
+    },
+    "require": {},
+    "minimum-stability": "dev"
+}

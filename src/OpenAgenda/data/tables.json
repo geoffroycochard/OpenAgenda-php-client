@@ -1,0 +1,60 @@
+{
+    "event" : {
+        "fields" : [
+            {
+                "type"  : "integer",
+                "key_lo"  : "uid",
+                "key_oa"   : "uid"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "slug",
+                "key_oa"   : "slug"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "canonicalUrl",
+                "key_oa"   : "canonicalUrl"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "title",
+                "key_oa"   : "title",
+                "translate"   : "fr"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "description",
+                "key_oa"   : "description",
+                "translate"   : "fr"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "longDescription",
+                "key_oa"   : "longDescription",
+                "translate"   : "fr"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "html",
+                "key_oa"   : "html",
+                "translate"   : "fr"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "image",
+                "key_oa"   : "image"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "thumbnail",
+                "key_oa"   : "thumbnail"
+            },
+            {
+                "type"  : "string",
+                "key_lo"   : "originalImage",
+                "key_oa"   : "originalImage"
+            }
+        ]
+    }
+}
