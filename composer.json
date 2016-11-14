@@ -14,6 +14,8 @@
             "OpenAgenda\\": "src/OpenAgenda/"
         }
     },
-    "require": {},
+    "require": {
+      "jamesmoss/flywheel": "*"
+    },
     "minimum-stability": "dev"
 }
