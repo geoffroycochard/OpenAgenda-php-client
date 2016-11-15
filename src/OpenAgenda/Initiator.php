@@ -2,6 +2,7 @@
 namespace OpenAgenda;
 
 use OpenAgenda\Pagination\Pagination;
+use OpenAgenda\Provider\ParameterProvider;
 use OpenAgenda\RestClient\RestClient;
 
 /**
@@ -28,27 +29,40 @@ class Initiator
      */
     private $total;
 
+    private $parameterProvider;
+
     public function __construct($agendaId)
     {
         $this->agendaId = $agendaId;
     }
 
+    /**
+     * @param array $query
+     * @return mixed
+     * @throws \Exception
+     */
     public function getEvents($query = array())
     {
 
         $this->query = $query;
 
-        $limit = $this->getLimit();
-        $offset = $limit*($this->getPage()-1);
+        $this->parameterProvider = new ParameterProvider($query);
+
+        $limit = $this->parameterProvider->getLimit();
+        $offset = $limit*($this->parameterProvider->getPage()-1);
+
+
+        $parameters = array_merge([
+            'limit' => $limit,
+            'page'  => $this->parameterProvider->getPage(),
+            'offset' => $offset
+        ],$this->parameterProvider->getExtraQueries());
+
 
         $api = new RestClient([
             'base_url' => sprintf('https://openagenda.com/agendas/%s', $this->agendaId),
             'format' => 'json',
-            'parameters' => [
-                'limit' => $limit,
-                'page'  => $this->getPage(),
-                'offset' => $offset
-            ]
+            'parameters' => $parameters
         ]);
 
         $result = $api->get('events', []);
@@ -59,40 +73,47 @@ class Initiator
 
         $response = $result->decode_response();
 
-        $pagination = new Pagination(
-            $response->total,
-            $this->getLimit(),
-            $this->getPage()
-        );
+        if (isset($response->total)) {
+            $pagination = new Pagination(
+                $response->total,
+                $this->parameterProvider->getLimit(),
+                $this->parameterProvider->getPage(),
+                $this->parameterProvider->getPaginationRange()
+            );
 
-        $response->pagination = $pagination->parse();
+            $response->pagination = $pagination->parse();
+        }
+
 
         return $response;
     }
 
-    private function getLimit()
-    {
-        return $this->getQueryVar('limit') ? $this->getQueryVar('limit') : 10;
-    }
-
-    private function getPage()
-    {
-        return $this->getQueryVar('page') ? $this->getQueryVar('page') : 1;
-    }
-
     /**
-     * @param $var
-     * @return mixed
-     * @todo : check type var
+     * To match one event
+     * @param $id
+     * @return bool
+     * @throws \Exception
+     * @todo : handling errors
      */
-    private function getQueryVar($var)
+    public function getEvent($id)
     {
-        if (array_key_exists($var, $this->query)) {
-            return $this->query[$var];
-        } else {
+        $response = $this->getEvents([
+            'oaq' => [
+                'uids' => [$id]
+            ]
+        ]);
+
+        if (
+            !isset($response->total) ||
+            $response->total == 0 ||
+            $response->total > 1
+        ) {
             return false;
         }
+
+        return $response->events[0];
     }
+
 
 
 }

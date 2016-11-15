@@ -20,14 +20,14 @@ class Pagination
 
     private $items = [];
 
-    public function __construct($totalItems, $limit, $page)
+    public function __construct($totalItems, $limit, $page, $range)
     {
         $this->totalItems = $totalItems;
         $this->limit = $limit;
         $this->page = $page;
 
         $this->totalPages = ceil($totalItems / $limit);
-        $this->range = 5;
+        $this->range = is_numeric($range) ? $range : 5;
     }
     
     public function parse()

@@ -29,7 +29,8 @@ class Item
     }
 
     /**
-     * @param mixed $label
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
@@ -48,6 +49,7 @@ class Item
 
     /**
      * @param mixed $isCurrent
+     * @return $this
      */
     public function setIsCurrent($isCurrent)
     {
@@ -66,6 +68,7 @@ class Item
 
     /**
      * @param mixed $number
+     * @return $this
      */
     public function setNumber($number)
     {
