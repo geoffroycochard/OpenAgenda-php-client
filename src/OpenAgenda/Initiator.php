@@ -1,15 +1,24 @@
 <?php
+/*
+ * This file is part of the OpenAgenda library client.
+ *
+ * (c) Geoffroy Cochard <geoffroy.cochard@orleans-agglo.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace OpenAgenda;
 
 use OpenAgenda\Pagination\Pagination;
 use OpenAgenda\Provider\ParameterProvider;
 use OpenAgenda\RestClient\RestClient;
 
+
 /**
- * Created by PhpStorm.
- * User: geoffroycochard
- * Date: 26/10/2016
- * Time: 11:04
+ * The Initiatior library class.
+ *
+ * @author Geoffroy Cochard <geoffroy.cochard@orleans-agglo.fr>
  */
 class Initiator
 {
