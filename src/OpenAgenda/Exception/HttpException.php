@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the OpenAgenda library client.
  *
@@ -8,13 +9,11 @@
  * file that was distributed with this source code.
  */
 
-
 namespace OpenAgenda\Exception;
-
 
 class HttpException extends \RuntimeException
 {
-    
+
     /**
      * HttpException constructor.
      * @param string $result

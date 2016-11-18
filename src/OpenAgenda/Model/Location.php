@@ -1,7 +1,4 @@
 <?php
-namespace OpenAgenda\Model;
-
-use OpenAgenda\Exception\ModelValidatorException;
 
 /**
  * This file is part of the OpenAgenda library client.
@@ -11,6 +8,10 @@ use OpenAgenda\Exception\ModelValidatorException;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace OpenAgenda\Model;
+
+use OpenAgenda\Exception\ModelValidatorException;
 
 class Location implements ModelInterface
 {

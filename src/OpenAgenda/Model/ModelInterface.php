@@ -1,5 +1,4 @@
 <?php
-namespace OpenAgenda\Model;
 
 /**
  * This file is part of the OpenAgenda library client.
@@ -9,6 +8,8 @@ namespace OpenAgenda\Model;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace OpenAgenda\Model;
 
 interface ModelInterface
 {

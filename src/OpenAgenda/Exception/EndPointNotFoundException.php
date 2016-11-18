@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the OpenAgenda library client.
  *
@@ -12,6 +13,7 @@ namespace OpenAgenda\Exception;
 
 class EndPointNotFoundException  extends \RuntimeException
 {
+
     /**
      * EndPointNotFoundException constructor.
      * @param string $key
@@ -20,4 +22,5 @@ class EndPointNotFoundException  extends \RuntimeException
     {
         parent::__construct(sprintf('EndPoint for action %s is not found', $key));
     }
+    
 }

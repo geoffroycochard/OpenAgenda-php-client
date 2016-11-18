@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the OpenAgenda library client.
  *
@@ -9,7 +10,6 @@
  */
 
 namespace OpenAgenda\Provider;
-
 
 use OpenAgenda\Exception\EndPointNotFoundException;
 
