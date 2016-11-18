@@ -9,7 +9,7 @@ Librairie cliente basée sur le service [openagenda.com](http://openagenda.com).
 
 Instancier l'initiator
 
-    $oa = new OpenAgenda\Initiator($agendaId);
+    $oa = new OpenAgenda\Reader($agendaId);
  
 Récupérer tous les éléments avec pagination
 
@@ -22,7 +22,7 @@ Récupérer tous les éléments avec pagination
     
 Récupérer un événement suivant un id event
 
-    $oa = new OpenAgenda\Initiator($agendaId);
+    $oa = new OpenAgenda\Reader($agendaId);
 
     if (!$event = $oa->getEvent($id)) {
         $app->abort(404, "Agenda $id does not exist.");
