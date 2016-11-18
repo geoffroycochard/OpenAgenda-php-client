@@ -181,7 +181,7 @@ class RestClient implements \Iterator, \ArrayAccess {
             $client->url .= strpos($client->url, '?')? '&' : '?';
             $client->url .= $parameters_string;
         }
-        
+
         if($client->options['base_url']){
             if($client->url[0] != '/' && substr($client->options['base_url'], -1) != '/')
                 $client->url = '/' . $client->url;

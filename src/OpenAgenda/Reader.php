@@ -20,7 +20,7 @@ use OpenAgenda\RestClient\RestClient;
  *
  * @author Geoffroy Cochard <geoffroy.cochard@orleans-agglo.fr>
  */
-class Initiator
+class Reader
 {
 
     /**
