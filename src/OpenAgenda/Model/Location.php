@@ -13,11 +13,11 @@ namespace OpenAgenda\Model;
 
 use OpenAgenda\Exception\ModelValidatorException;
 
-class Location implements ModelInterface
+class Location extends ModelBase
 {
     private $id;
 
-    private $title;
+    private $placename;
 
     private $address;
 
@@ -46,18 +46,18 @@ class Location implements ModelInterface
     /**
      * @return mixed
      */
-    public function getTitle()
+    public function getPlacename()
     {
-        return $this->title;
+        return $this->placename;
     }
 
     /**
-     * @param mixed $title
+     * @param mixed $placename
      * @return Location
      */
-    public function setTitle($title)
+    public function setPlacename($placename)
     {
-        $this->title = $title;
+        $this->placename = $placename;
         return $this;
     }
 
@@ -137,7 +137,7 @@ class Location implements ModelInterface
     public function toArray()
     {
         return [
-            'placename' => $this->getTitle(),
+            'placename' => $this->getPlacename(),
             'address'   => $this->getAddress(),
             'latitude'  => $this->getLatitude(),
             'longitude' => $this->getLongitude()
