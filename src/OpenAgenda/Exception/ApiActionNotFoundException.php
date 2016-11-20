@@ -11,7 +11,7 @@
 
 namespace OpenAgenda\Exception;
 
-class EndPointNotFoundException  extends \RuntimeException
+class ApiActionNotFoundException  extends \RuntimeException
 {
 
     /**
@@ -22,5 +22,5 @@ class EndPointNotFoundException  extends \RuntimeException
     {
         parent::__construct(sprintf('EndPoint for action %s is not found', $key));
     }
-    
+
 }

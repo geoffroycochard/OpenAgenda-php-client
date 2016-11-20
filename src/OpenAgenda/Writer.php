@@ -12,54 +12,89 @@
 namespace OpenAgenda;
 
 use OpenAgenda\Exception\HttpException;
-use OpenAgenda\Model\ModelInterface;
-use OpenAgenda\Provider\EndPointProvider;
+use OpenAgenda\Model\ModelBase;
+use OpenAgenda\Provider\ApiActionProvider;
 use OpenAgenda\Provider\ModelPersisterProvider;
 use OpenAgenda\RestClient\RestClient;
 
 class Writer
 {
 
-    private $apiKey;
-
     private $secret;
 
     private $token;
 
+    private $restClient;
+
     private $modelPersisterProvider;
 
-    private $endPointProvider;
+    private $apiActionProvider;
 
     /**
      * Writer constructor.
+     * @param $secret
      */
-    public function __construct($apiKey, $secret)
+    public function __construct($secret)
     {
-        $this->apiKey = $apiKey;
         $this->secret = $secret;
 
+        $this->restClient = new RestClient();
         $this->modelPersisterProvider = new ModelPersisterProvider();
-        $this->endPointProvider = new EndPointProvider();
+        $this->apiActionProvider = new ApiActionProvider();
 
         $this->setAccessToken();
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSecret()
+    {
+        return $this->secret;
+    }
+
+    /**
+     * @param mixed $secret
+     * @return Writer
+     */
+    public function setSecret($secret)
+    {
+        $this->secret = $secret;
+        return $this;
+    }
+
+    /**
+     * @return RestClient
+     */
+    public function getRestClient()
+    {
+        return $this->restClient;
+    }
+
+    /**
+     * @param RestClient $restClient
+     */
+    public function setRestClient($restClient)
+    {
+        $this->restClient = $restClient;
+    }
+
     public function setAccessToken()
     {
-        $url = $this->getEndPointProvider()->get('accessToken.request');
-//        $this->token = 'po87gjjGR4567';
+        $url = $this->getApiActionProvider()->get('accessToken.request');
 
-        $client = new RestClient();
-        $result = $client->post($url,[
+        $result = $this->getRestClient()->post($url, [
             'grant_type' => 'authorization_code',
-            'code' => $this->apiKey
+            'code' => $this->getSecret()
         ]);
 
         if($result->info->http_code != 200) {
             throw new HttpException($result);
         }
-        debug('stop',1);
+
+        $data = json_decode($result->response, true);
+        return $data['access_token'];
     }
     
     /**
@@ -81,24 +116,24 @@ class Writer
     }
 
     /**
-     * @return EndPointProvider
+     * @return ApiActionProvider
      */
-    public function getEndPointProvider()
+    public function getApiActionProvider()
     {
-        return $this->endPointProvider;
+        return $this->apiActionProvider;
     }
 
     /**
-     * @param EndPointProvider $endPointProvider
+     * @param ApiActionProvider $apiActionProvider
      * @return Writer
      */
-    public function setEndPointProvider($endPointProvider)
+    public function setApiActionProvider($apiActionProvider)
     {
-        $this->endPointProvider = $endPointProvider;
+        $this->apiActionProvider = $apiActionProvider;
         return $this;
     }
 
-    public function persist(ModelInterface $model)
+    public function persist(ModelBase $model)
     {
         $this->getModelPersisterProvider()->persist($model);
 
@@ -106,21 +141,19 @@ class Writer
         // find end point
         $action = empty($model->getId()) ? 'create' : 'update';
 
-        $reflect = new \ReflectionClass($model);
-        $ep = $this->getEndPointProvider()->get(strtolower($reflect->getShortName()).'.'.$action);
+        $ep = $this->getApiActionProvider()->get(strtolower($model->getShortName()).'.'.$action);
 
         list($url, $method) = explode('|', $ep);
 
         $url = str_replace('%id%', $model->getId(), $url);
 
-
-        $client = new RestClient();
-
-        $result = $client->post($url, [
+        $result = $this->getRestClient()->post($url, [
             'access_token' => $this->token,
             'nonce' => rand(0, 100000),
             'data' => json_encode($model->toArray())
         ]);
+
+        debug($result,1);
 
         if($result->info->http_code != 200) {
             throw new HttpException($result);
