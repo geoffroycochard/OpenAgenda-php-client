@@ -11,12 +11,12 @@
 
 namespace OpenAgenda\Provider;
 
-use OpenAgenda\Model\ModelInterface;
+use OpenAgenda\Model\ModelBase;
 
 class ModelPersisterProvider
 {
 
-    public function persist(ModelInterface $model)
+    public function persist(ModelBase $model)
     {
         $model->validate();
     }
