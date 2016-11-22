@@ -33,7 +33,7 @@ class ApiActionProvider
             'delete' => 'events'
         ],
         'associate' => [
-            'toAgenda' => '/agendas/%id%/events'
+            'toAgenda' => 'agendas/%id%/events'
         ]
     ];
 

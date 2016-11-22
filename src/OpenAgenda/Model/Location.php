@@ -11,19 +11,58 @@
 
 namespace OpenAgenda\Model;
 
-use OpenAgenda\Exception\ModelValidatorException;
-
 class Location extends ModelBase
 {
+    protected static $metas = [
+        'placeName' => [
+            'type' => 'string',
+            'validator' => [
+                'required' => true,
+                'minLength' => 5,
+                'maxLength' => 255
+            ]
+        ],
+        'address'   => [
+            'type' => 'string',
+            'validator' => [
+                'required' => true,
+                'minLength' => 10,
+                'maxLength' => 255
+            ]
+        ],
+        'latitude'  => [
+            'type' => 'float',
+            'validator' => [
+                'required' => true,
+                'latitude' => true
+            ]
+        ],
+        'longitude' => [
+            'type' => 'float',
+            'validator' => [
+                'required' => true,
+                'longitude' => true
+            ]
+        ]
+    ];
+
     private $id;
 
-    private $placename;
+    private $placeName;
 
     private $address;
 
     private $latitude;
     
     private $longitude;
+
+    /**
+     * Location constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct(self::$metas);
+    }
 
     /**
      * @return mixed
@@ -46,18 +85,18 @@ class Location extends ModelBase
     /**
      * @return mixed
      */
-    public function getPlacename()
+    public function getPlaceName()
     {
-        return $this->placename;
+        return $this->placeName;
     }
 
     /**
-     * @param mixed $placename
+     * @param mixed $placeName
      * @return Location
      */
-    public function setPlacename($placename)
+    public function setPlaceName($placeName)
     {
-        $this->placename = $placename;
+        $this->placeName = $placeName;
         return $this;
     }
 
@@ -115,32 +154,38 @@ class Location extends ModelBase
         return $this;
     }
 
-    public function validate()
-    {
-        // All are required
-        foreach (get_object_vars($this) as $property => $value) {
-            if ($property === 'id') continue;
-            if (empty($value)) {
-                throw new ModelValidatorException(get_class($this), $property, 'required');
-            }
-        }
 
-        if (!preg_match('/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}$/', $this->getLatitude())) {
-            throw new ModelValidatorException(get_class($this), 'latitude', 'is not a latitude format');
-        }
-
-        if (!preg_match('/^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\.{1}\d{1,6}$/', $this->getLongitude())) {
-            throw new ModelValidatorException(get_class($this), 'longitude', 'is not a longitude format');
-        }
-    }
-
-    public function toArray()
+//    public function validate()
+//    {
+//        // All are required
+//        foreach (get_object_vars($this) as $property => $value) {
+//            if ($property === 'id') continue;
+//            if (empty($value)) {
+//                throw new ModelValidatorException(get_class($this), $property, 'required');
+//            }
+//        }
+//
+//        if (!preg_match('/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}$/', $this->getLatitude())) {
+//            throw new ModelValidatorException(get_class($this), 'latitude', 'is not a latitude format');
+//        }
+//
+//        if (!preg_match('/^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\.{1}\d{1,6}$/', $this->getLongitude())) {
+//            throw new ModelValidatorException(get_class($this), 'longitude', 'is not a longitude format');
+//        }
+//    }
+//
+    public function toArrayToOA()
     {
         return [
-            'placename' => $this->getPlacename(),
+            'placename' => $this->getPlaceName(),
             'address'   => $this->getAddress(),
             'latitude'  => $this->getLatitude(),
             'longitude' => $this->getLongitude()
         ];
     }
+//
+//    public function getMetas()
+//    {
+//        return self::$metas;
+//    }
 }

@@ -11,8 +11,19 @@
 namespace OpenAgenda\Model;
 
 
-class ModelBase implements ModelInterface
+abstract class ModelBase implements ModelInterface
 {
+
+//    private static $metas = [];
+
+    /**
+     * ModelBase constructor.
+     * @param array $metas
+     */
+//    public function __construct(Array $metas)
+//    {
+//        self::$metas = $metas;
+//    }
 
     /**
      * @return string
@@ -23,18 +34,54 @@ class ModelBase implements ModelInterface
         return $reflect->getShortName();
     }
 
-    public function getId()
+    public function getMeta($type)
     {
+        if (array_key_exists($type, $this->getMetas())) {
+            return self::$metas[$type];
+        }
         return false;
+    }
+
+    public function getMetasToValidate()
+    {
+        $a = [];
+        foreach ($this->getMetas() as $key => $value) {
+            if ($value['type'] == 'oneToMany') {
+                $getter = 'get'.ucfirst($key);
+                $datas = call_user_func([$this, $getter]);
+                foreach ($datas as $data) {
+                    $data->validate();
+                }
+            }
+
+            # TODO : Add default Validator from Type
+            if (!empty($value['validator'])) {
+                $a[$key] = $value['validator'];
+            }
+        }
+        return $a;
     }
 
     public function validate()
     {
+        $metas = $this->getMetasToValidate();
+
+        if (empty($metas)) return true;
+
+        foreach ($metas as $key => $validators) {
+            foreach ($validators as $type => $param) {
+                $validator = 'OpenAgenda\\Validator\\'.ucfirst($type.'Validator');
+                $v = new $validator;
+                $method = new \ReflectionMethod($validator, 'validate');
+                $method->invoke($v,$this, $key, $param);
+            }
+        }
         return true;
     }
 
-    public function toArray()
+    public function getMetas()
     {
-        return [];
+        return static::$metas;
     }
+
 }

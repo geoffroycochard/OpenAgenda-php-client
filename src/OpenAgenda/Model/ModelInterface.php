@@ -13,11 +13,12 @@ namespace OpenAgenda\Model;
 
 interface ModelInterface
 {
-
     public function getId();
     
     public function validate();
 
-    public function toArray();
+    public function toArrayToOA();
+
+    public function getMetas();
 
 }

@@ -42,7 +42,7 @@ class Writer
         $this->modelPersisterProvider = new ModelPersisterProvider();
         $this->apiActionProvider = new ApiActionProvider();
 
-        $this->setAccessToken();
+        $this->generateAccessToken();
 
     }
 
@@ -80,21 +80,22 @@ class Writer
         $this->restClient = $restClient;
     }
 
-    public function setAccessToken()
+    /**
+     * @param mixed $token
+     */
+    public function setToken($token)
     {
-        $url = $this->getApiActionProvider()->get('accessToken.request');
+        $this->token = $token;
+        return $this;
+    }
 
-        $result = $this->getRestClient()->post($url, [
-            'grant_type' => 'authorization_code',
-            'code' => $this->getSecret()
-        ]);
 
-        if($result->info->http_code != 200) {
-            throw new HttpException($result);
-        }
-
-        $data = json_decode($result->response, true);
-        return $data['access_token'];
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
     
     /**
@@ -133,12 +134,29 @@ class Writer
         return $this;
     }
 
+
+    public function generateAccessToken()
+    {
+        $url = $this->getApiActionProvider()->get('accessToken.request');
+
+        $result = $this->getRestClient()->post($url, [
+            'grant_type' => 'authorization_code',
+            'code' => $this->getSecret()
+        ]);
+
+        if($result->info->http_code != 200) {
+            throw new HttpException($result);
+        }
+
+        $data = json_decode($result->response, true);
+        $this->token = $data['access_token'];
+    }
+
     public function persist(ModelBase $model)
     {
         $this->getModelPersisterProvider()->persist($model);
 
         // And go to api
-        // find end point
         $action = empty($model->getId()) ? 'create' : 'update';
 
         $ep = $this->getApiActionProvider()->get(strtolower($model->getShortName()).'.'.$action);
@@ -148,19 +166,45 @@ class Writer
         $url = str_replace('%id%', $model->getId(), $url);
 
         $result = $this->getRestClient()->post($url, [
-            'access_token' => $this->token,
+            'access_token' => $this->getToken(),
             'nonce' => rand(0, 100000),
-            'data' => json_encode($model->toArray())
+            'lang'=> 'fr',
+            'data' => json_encode($model->toArrayToOA())
         ]);
-
-        debug($result,1);
 
         if($result->info->http_code != 200) {
             throw new HttpException($result);
         }
 
+        $response = $result->response;
+        $json = json_decode($response);
+        return $json->uid;
+
     }
 
+    public function associate($event, $agenda)
+    {
+        $url = $this->getApiActionProvider()->get('associate.toAgenda');
+        $url = str_replace('%id%', $agenda, $url);
+
+        $result = $this->getRestClient()->post($url, [
+            'access_token' => $this->getToken(),
+            'nonce' => rand(0, 100000),
+            'lang'=> 'fr',
+            'data' => json_encode([
+                'event_uid' => $event
+            ])
+        ]);
+
+        if($result->info->http_code != 200) {
+            throw new HttpException($result);
+        }
+
+        $response = $result->response;
+        $json = json_decode($response);
+        return $json->uid;
+
+    }
 
 
 }

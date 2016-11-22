@@ -1,4 +1,7 @@
 <?php
+namespace OpenAgenda\Validator;
+
+use OpenAgenda\Model\ModelBase;
 
 /**
  * This file is part of the OpenAgenda library client.
@@ -11,5 +14,5 @@
 
 interface ValidatorInterface
 {
-
+    public function validate(ModelBase $model, $property, $param);
 }
