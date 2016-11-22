@@ -192,3 +192,15 @@ Attention l'API d'écriture va être refondu en Janvier 2017.
         
         return true;
     });
+    
+# Evolutions
+  
+## Court terme
+
+ - ~~Writer~
+ - Autre champs (Location / Event)
+ - Image
+  
+## Long terme
+
+ - Multilangue
