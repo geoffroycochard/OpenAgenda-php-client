@@ -130,7 +130,7 @@ Attention l'API d'écriture va être refondu en Janvier 2017.
             debug($ex->getMessage(),1);
         }
         
-        $oaw = new OpenAgenda\Writer('Zx9UAGyhCoNigLQL99aC5XCCZInaw9n1');
+        $oaw = new OpenAgenda\Writer('your--secret--code');
     
         foreach ($results as $result) {
     
