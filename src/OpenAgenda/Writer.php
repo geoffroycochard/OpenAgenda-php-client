@@ -164,13 +164,23 @@ class Writer
         list($url, $method) = explode('|', $ep);
 
         $url = str_replace('%id%', $model->getId(), $url);
-
-        $result = $this->getRestClient()->post($url, [
+        
+        $data = [
             'access_token' => $this->getToken(),
             'nonce' => rand(0, 100000),
             'lang'=> 'fr',
-            'data' => json_encode($model->toArrayToOA())
-        ]);
+            'data' => json_encode($model->toArrayToOA()),
+            'publish' => false
+        ];
+
+        if (get_class($model) == 'OpenAgenda\Model\Event' && $model->getImage()) {
+            $tempfile = tempnam('.', 'FOO').'.jpg';
+            if (@copy($model->getImage(), $tempfile)) {
+                $data['image'] = new \CURLFile($tempfile);
+            }
+        }
+//        debug($data,1);
+        $result = $this->getRestClient()->post($url, $data);
 
         if($result->info->http_code != 200) {
             throw new HttpException($result);

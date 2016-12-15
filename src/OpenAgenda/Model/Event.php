@@ -71,14 +71,6 @@ class Event extends ModelBase
     private $image;
 
     /**
-     * Location constructor.
-     */
-//    public function __construct()
-//    {
-//        parent::__construct(self::$metas);
-//    }
-
-    /**
      * @return mixed
      */
     public function getTitle()
@@ -229,8 +221,9 @@ class Event extends ModelBase
         return [
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
-            'html' => $this->getHtml(),
+            'freeText' => $this->getHtml(),
             'tags' => implode(',', $this->getTags()),
+            'publish' => false,
             'locations' => [[
                 'uid' => $this->getLocation(),
                 'dates' => $dates

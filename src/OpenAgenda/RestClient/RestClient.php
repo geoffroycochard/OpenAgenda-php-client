@@ -140,9 +140,12 @@ class RestClient implements \Iterator, \ArrayAccess {
         $curlopt = [
             CURLOPT_HEADER => TRUE, 
             CURLOPT_RETURNTRANSFER => TRUE, 
-            CURLOPT_USERAGENT => $client->options['user_agent']
+            CURLOPT_USERAGENT => $client->options['user_agent'],
+            CURLOPT_VERBOSE => TRUE
         ];
-        
+
+        curl_setopt($client->handle, CURLOPT_SAFE_UPLOAD, true);
+
         if($client->options['username'] && $client->options['password'])
             $curlopt[CURLOPT_USERPWD] = sprintf("%s:%s", 
                 $client->options['username'], $client->options['password']);
@@ -172,7 +175,8 @@ class RestClient implements \Iterator, \ArrayAccess {
         
         if(strtoupper($method) == 'POST'){
             $curlopt[CURLOPT_POST] = TRUE;
-            $curlopt[CURLOPT_POSTFIELDS] = $parameters_string;
+//            $curlopt[CURLOPT_POSTFIELDS] = $parameters_string;
+            $curlopt[CURLOPT_POSTFIELDS] = array_merge($client->options['parameters'], $parameters);
         }
         elseif(strtoupper($method) != 'GET'){
             $curlopt[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
@@ -197,7 +201,7 @@ class RestClient implements \Iterator, \ArrayAccess {
             }
         }
         curl_setopt_array($client->handle, $curlopt);
-        
+
         $client->parse_response(curl_exec($client->handle));
         $client->info = (object) curl_getinfo($client->handle);
         $client->error = curl_error($client->handle);
@@ -210,6 +214,7 @@ class RestClient implements \Iterator, \ArrayAccess {
         $query = "";
         foreach($parameters as $key => $values){
             foreach(is_array($values)? $values : [$values] as $value){
+                if (is_object($value)) continue;
                 $pair = [urlencode($key), urlencode($value)];
                 $query .= implode($primary, $pair) . $secondary;
             }

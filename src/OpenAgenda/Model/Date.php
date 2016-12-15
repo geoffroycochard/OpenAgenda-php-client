@@ -46,15 +46,7 @@ class Date extends ModelBase
     private $timeStart;
 
     private $timeEnd;
-
-    /**
-     * Date constructor.
-     */
-//    public function __construct()
-//    {
-//        parent::__construct(self::$metas);
-//    }
-
+    
     /**
      * @return mixed
      */

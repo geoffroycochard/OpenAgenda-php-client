@@ -14,17 +14,6 @@ namespace OpenAgenda\Model;
 abstract class ModelBase implements ModelInterface
 {
 
-//    private static $metas = [];
-
-    /**
-     * ModelBase constructor.
-     * @param array $metas
-     */
-//    public function __construct(Array $metas)
-//    {
-//        self::$metas = $metas;
-//    }
-
     /**
      * @return string
      */
